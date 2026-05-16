@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/php/:path*",
-      "destination": "https://YOUR-AWARDSPACE-DOMAIN/:path*"
+      "destination": "http://medguidex.atwebpages.com/:path*"
     },
     {
       "source": "/api/:path*",
