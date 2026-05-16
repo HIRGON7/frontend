@@ -454,9 +454,7 @@ function loadSymptomsWithJsonp() {
 useEffect(() => {
   async function loadSymptomsFromDatabase() {
     try {
-     const response = await fetch("/api/get_symptoms");
-
-      const data = await response.json();
+     const data = await loadSymptomsWithJsonp();
 
       let symptomsFromDatabase = [];
 
@@ -483,7 +481,8 @@ useEffect(() => {
       };
 
       symptomsFromDatabase.forEach((row) => {
-        const symptomName =
+       const symptomName =
+          row.symptom_key ||
           row.symptom_name ||
           row.name ||
           row.symptom ||
