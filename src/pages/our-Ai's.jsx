@@ -17,11 +17,17 @@ function Ai() {
     const savedSymptoms = localStorage.getItem("medguide_selected_symptoms");
 
     if (savedSymptoms) {
-      const symptoms = JSON.parse(savedSymptoms);
-      setSelectedSymptoms(symptoms);
+      try {
+        const symptoms = JSON.parse(savedSymptoms);
 
-      if (symptoms.length > 0) {
-        predictDisease(symptoms);
+        setSelectedSymptoms(symptoms);
+
+        if (symptoms.length > 0) {
+          predictDisease(symptoms);
+        }
+      } catch (error) {
+        console.log("Could not read saved symptoms:", error);
+        setError("Could not read selected symptoms.");
       }
     }
 
@@ -44,72 +50,136 @@ function Ai() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           symptoms: symptoms,
         }),
       });
 
+      const text = await response.text();
+
+      console.log("Raw FastAPI response:", text);
+
       if (!response.ok) {
-        setError("FastAPI request failed.");
-        setLoading(false);
-        return;
+        throw new Error("FastAPI request failed with status " + response.status);
       }
 
-      const data = await response.json();
-
-      if (data.predicted_disease) {
-        setPredictedDisease(data.predicted_disease);
-        fetchDiseaseDetails(data.predicted_disease);
+      if (text.trim().startsWith("<")) {
+        throw new Error("FastAPI returned HTML instead of JSON.");
       }
+
+      const data = JSON.parse(text);
+
+      console.log("FastAPI prediction response:", data);
+
+      if (!data.predicted_disease) {
+        throw new Error("FastAPI did not return predicted_disease.");
+      }
+
+      const diseaseName = data.predicted_disease;
+
+      setPredictedDisease(diseaseName);
 
       if (data.confidence !== undefined && data.confidence !== null) {
         setConfidence(data.confidence);
       }
 
-    } catch (error) {
-      console.log(error);
-      setError("Could not connect to FastAPI.");
-    }
+      const diseaseDetails = await getDiseaseDetailsFromDatabase(diseaseName);
 
-    setLoading(false);
+      setSeverity(diseaseDetails.severity_level || "—");
+      setRecommendation(diseaseDetails.recommendation || "—");
+      setConsultDoctor(diseaseDetails.consult_doctor || "—");
+    } catch (error) {
+      console.log("AI page error:", error);
+      setError(error.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
   }
 
-  async function fetchDiseaseDetails(diseaseName) {
-    try {
-      const response = await fetch("https://ml-2-h1n1.onrender.com/disease-details", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          disease: diseaseName,
-        }),
-      });
+  async function getDiseaseDetailsFromDatabase(diseaseName) {
+    const response = await fetch("/php/get_disease_details.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        disease: diseaseName,
+      }),
+    });
 
-      const data = await response.json();
+    const text = await response.text();
 
-      if (data.success && data.disease) {
-        setSeverity(data.disease.severity_level || "—");
-        setRecommendation(data.disease.recommendation || "—");
-        setConsultDoctor(data.disease.consult_doctor || "—");
-      }
+    console.log("Raw disease details response:", text);
 
-    } catch (error) {
-      console.log("Could not load disease details:", error);
+    if (!response.ok) {
+      throw new Error("Disease details request failed with status " + response.status);
     }
+
+    if (text.trim().startsWith("<")) {
+      throw new Error("PHP returned HTML instead of JSON.");
+    }
+
+    const json = JSON.parse(text);
+
+    console.log("Disease details response:", json);
+
+    if (!json.success) {
+      throw new Error(json.message || "Disease details not found in database.");
+    }
+
+    return json.disease;
+  }
+
+  function formatConfidence(value) {
+    if (value === null || value === undefined) {
+      return {
+        title: "—",
+        width: "0%",
+      };
+    }
+
+    let numberValue = Number(value);
+
+    if (Number.isNaN(numberValue)) {
+      return {
+        title: "—",
+        width: "0%",
+      };
+    }
+
+    if (numberValue <= 1) {
+      numberValue = numberValue * 100;
+    }
+
+    if (numberValue > 100) {
+      numberValue = 100;
+    }
+
+    if (numberValue < 0) {
+      numberValue = 0;
+    }
+
+    return {
+      title: numberValue.toFixed(2) + "% Confidence",
+      width: numberValue + "%",
+    };
   }
 
   let diseaseText = "No result yet";
   let subText = "Waiting for AI prediction";
-  let confidenceTitle = "—";
-  let confidenceWidth = "0%";
+  let confidenceInfo = formatConfidence(confidence);
+  let confidenceTitle = confidenceInfo.title;
+  let confidenceWidth = confidenceInfo.width;
   let backendStatus = "Online";
 
   if (loading === true) {
     diseaseText = "Analyzing...";
     subText = "Please wait";
     confidenceTitle = "Loading...";
+    confidenceWidth = "0%";
     backendStatus = "Loading";
   }
 
@@ -117,17 +187,13 @@ function Ai() {
     diseaseText = "Prediction failed";
     subText = "Could not get prediction";
     confidenceTitle = "—";
+    confidenceWidth = "0%";
     backendStatus = "Offline";
   }
 
   if (predictedDisease !== "" && loading === false && error === "") {
     diseaseText = predictedDisease.replaceAll("_", " ");
     subText = "Most likely condition";
-  }
-
-  if (confidence !== null && loading === false && error === "") {
-    confidenceTitle = confidence.toFixed(2) + "% Confidence";
-    confidenceWidth = confidence + "%";
   }
 
   return (
@@ -179,6 +245,7 @@ function Ai() {
             <h2>{diseaseText}</h2>
             <p>{subText}</p>
             <h3>{confidenceTitle}</h3>
+
             <div className="confidence-bar">
               <div
                 className="confidence-fill"
