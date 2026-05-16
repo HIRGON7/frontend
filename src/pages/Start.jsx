@@ -414,6 +414,43 @@ const [symptomCategories, setSymptomCategories] = useState(backupSymptomCategori
 const [isLoading, setIsLoading] = useState(true);
 const [errorMessage, setErrorMessage] = useState("");
 const navigate = useNavigate();
+
+
+function loadSymptomsWithJsonp() {
+  return new Promise((resolve, reject) => {
+    const callbackName = "medguideSymptomsCallback_" + Date.now();
+
+    const script = document.createElement("script");
+
+    const timeoutId = setTimeout(() => {
+      cleanup();
+      reject(new Error("Symptoms request timed out."));
+    }, 10000);
+
+    function cleanup() {
+      clearTimeout(timeoutId);
+      delete window[callbackName];
+      script.remove();
+    }
+
+    window[callbackName] = function (data) {
+      cleanup();
+      resolve(data);
+    };
+
+    script.src =
+      "https://medguidex.rf.gd/get_symptoms.php?callback=" + callbackName;
+
+    script.onerror = function () {
+      cleanup();
+      reject(new Error("Could not load symptoms from InfinityFree."));
+    };
+
+    document.body.appendChild(script);
+  });
+}
+
+  
 useEffect(() => {
   async function loadSymptomsFromDatabase() {
     try {
