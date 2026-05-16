@@ -552,10 +552,13 @@ function removeSymptom(symptomToRemove) {
   <div className="whole-page">
 
 
-    <div className="title-lol">
-    <h1>Select Your Symptoms</h1>
-    
-    </div>
+  <div className="title-lol">
+  <h1>Select Your Symptoms</h1>
+
+  {isLoading && <p>Loading symptoms from database...</p>}
+
+  {errorMessage !== "" && <p>{errorMessage}</p>}
+</div>
 
 
  <div className="search-box">
