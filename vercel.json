@@ -1,12 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/php/(.*)",
-      "destination": "https://YOUR-AWARDSPACE-DOMAIN/$1"
+      "source": "/php/:path*",
+      "destination": "https://YOUR-AWARDSPACE-DOMAIN/:path*"
     },
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
     },
     {
       "source": "/((?!api/|php/).*)",
