@@ -1,0 +1,109 @@
+.nav-ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: fixed; 
+  left: 0;
+  top: 0;
+  width: 150px;
+  height: 100vh;
+  background: linear-gradient(to bottom,  #2563EB, white );
+
+  position: fixed;
+  overflow: hidden;
+  z-index: 5;
+}
+
+
+.nav-ul::before {
+  content: "";
+  position: absolute;
+
+  top: -150%;
+  left: -150%;
+  width: 1500%;
+  height: 300%;
+  pointer-events: none;
+  background: linear-gradient(
+    120deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.5)  50%,
+    transparent 60%
+  );
+
+
+
+  animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.nav-li a {
+  display: block;
+  color: white;
+  font-size:20px ;
+  padding: 30px 15px;
+  text-decoration: none;
+  transition: background-color 1s ease, color 1s ease;
+}
+
+.nav-li a:hover {
+  background-color: lch(98.18% 1.23 255.97);
+  color: #60A5FA;
+}
+
+.logoImg-Name{
+  margin-top: 30px;
+  
+  object-fit: contain;
+  display: block;
+  z-index: 4;
+ 
+}
+.logoImg-Name img:hover{
+  scale: 1.2;
+ 
+}
+.logoImg-Name img{
+width: 130px;
+height: 130px;
+transition: scale 1s ease-in-out;
+
+}
+.name{
+  color: #0072ff;
+}
+.guide{
+  color: #22C55E;
+}
+.the-x {
+  color: transparent;
+  background:url("../images/9.gif");
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-position: center;
+}
+.sidebar-ai-theme {
+
+  background:
+    radial-gradient(circle at center, rgba(0, 140, 255, 0.22), transparent 45%),
+    linear-gradient(180deg, #020716, #06142e 55%, #020716) !important;
+  border-right: 1px solid rgba(0, 140, 255, 0.65);
+  box-shadow:
+    0 0 25px rgba(0, 140, 255, 0.35),
+    inset 0 0 20px rgba(0, 140, 255, 0.15);
+}
+
+.sidebar-ai-theme a {
+    transition: 0.5s ease-in-out;
+  color: #eaf4ff !important;
+  text-shadow: 0 0 10px rgba(0, 140, 255, 0.75);
+}

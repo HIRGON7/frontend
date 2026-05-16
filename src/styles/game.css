@@ -1,0 +1,60 @@
+.game-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+}
+
+.zoom-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.title-game{
+  width: 800px;
+  height: 100px;
+  border-radius: 20px;
+  padding-top: 30px;
+   background:
+    radial-gradient(circle at 60% 10%, rgba(37,99,235,0.32) 0px, transparent 100px),
+    radial-gradient(circle at 20% 90%, rgba(37,99,235,0.32) 0px, transparent 100px),
+    #b8d2ec;
+}
+.zoom-controls button {
+  background: linear-gradient(to bottom right,#b8d2ec , #6daff1);
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s ease-in-out;
+}
+.zoom-controls button:hover{
+    color:  #6daff1;
+    background:white;
+}
+
+.game-frame-wrapper {
+     border: 10px solid transparent;
+  border-image: url("../images/9.gif")15;
+  border-radius: 30px;
+  width: 100%;
+  max-width: 2000px;
+  height: 750px;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #111;
+  border-radius: 15px;
+}
+
+.game-frame {
+    
+  width: 2000px;
+  height: 750px;
+  border: none;
+  transform-origin: center center;
+}
