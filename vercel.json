@@ -5,7 +5,7 @@
       "destination": "https://medguidex.rf.gd/:path*"
     },
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ]
