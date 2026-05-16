@@ -397,13 +397,110 @@ const legs = [
   "lower_body_pain",
   "skin_on_leg_or_foot_looks_infected",
 ];
+  const backupSymptomCategories = {
+  head,
+  chest,
+  stomach,
+  skin,
+  general,
+  legs,
+};
 
 const [activeCategory, setActiveCategory] = useState("head");
 const [selected, setSelected] = useState([]);
 const [searchText, setSearchText] = useState("");
 const [searchOpen, setSearchOpen] = useState(false);
+const [symptomCategories, setSymptomCategories] = useState(backupSymptomCategories);
+const [isLoading, setIsLoading] = useState(true);
+const [errorMessage, setErrorMessage] = useState("");
 const navigate = useNavigate();
+useEffect(() => {
+  async function loadSymptomsFromDatabase() {
+    try {
+      const response = await fetch("https://medguidex.rf.gd/get_symptoms.php");
 
+      const data = await response.json();
+
+      let symptomsFromDatabase = [];
+
+      if (Array.isArray(data)) {
+        symptomsFromDatabase = data;
+      } else if (Array.isArray(data.symptoms)) {
+        symptomsFromDatabase = data.symptoms;
+      } else {
+        throw new Error("The symptoms response is not in the expected format.");
+      }
+
+      const groupedSymptoms = {
+        head: [],
+        chest: [],
+        stomach: [],
+        skin: [],
+        general: [],
+        legs: [],
+      };
+
+      symptomsFromDatabase.forEach((row) => {
+        const symptomName =
+          row.symptom_name ||
+          row.name ||
+          row.symptom ||
+          row;
+
+        const categoryName =
+          row.category ||
+          row.category_name ||
+          "general";
+
+        const categoryKey = getCategoryKey(categoryName);
+
+        groupedSymptoms[categoryKey].push(symptomName);
+      });
+
+      setSymptomCategories(groupedSymptoms);
+      setErrorMessage("");
+    } catch (error) {
+      console.log(error);
+      setErrorMessage("Could not load symptoms from the database. Showing backup symptoms.");
+      setSymptomCategories(backupSymptomCategories);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  loadSymptomsFromDatabase();
+}, []);
+
+function getCategoryKey(categoryName) {
+  const text = String(categoryName).toLowerCase();
+
+  if (text.includes("head") || text.includes("neck")) {
+    return "head";
+  }
+
+  if (text.includes("chest") || text.includes("breathing")) {
+    return "chest";
+  }
+
+  if (
+    text.includes("stomach") ||
+    text.includes("abdomen") ||
+    text.includes("abdominal")
+  ) {
+    return "stomach";
+  }
+
+  if (text.includes("skin")) {
+    return "skin";
+  }
+
+  if (text.includes("leg") || text.includes("feet") || text.includes("foot")) {
+    return "legs";
+  }
+
+  return "general";
+}
+  
 function handleAnalyzeSymptoms() {
   if (selected.length === 0) {
     alert("Please select at least one symptom first.");
@@ -417,16 +514,9 @@ function handleAnalyzeSymptoms() {
 
     navigate("/our-Ai's");
 }
-const symptomCategories = {
-  head,
-  chest,
-  stomach,
-  skin,
-  general,
-  legs,
-};
 
-  const currentSymptoms = symptomCategories[activeCategory];
+
+const currentSymptoms = symptomCategories[activeCategory] || [];
   const allSymptoms = Object.values(symptomCategories).flat();
   const query = searchText.trim().replaceAll("_", " ").toLowerCase();
   
