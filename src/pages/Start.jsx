@@ -423,13 +423,18 @@ useEffect(() => {
 
       let symptomsFromDatabase = [];
 
-      if (Array.isArray(data)) {
-        symptomsFromDatabase = data;
-      } else if (Array.isArray(data.symptoms)) {
-        symptomsFromDatabase = data.symptoms;
-      } else {
-        throw new Error("The symptoms response is not in the expected format.");
-      }
+     if (Array.isArray(data)) {
+  symptomsFromDatabase = data;
+} else if (Array.isArray(data.symptoms)) {
+  symptomsFromDatabase = data.symptoms;
+} else if (Array.isArray(data.data)) {
+  symptomsFromDatabase = data.data;
+} else if (data.success === false) {
+  throw new Error(data.message || "The API returned success false.");
+} else {
+  console.log("Actual symptoms API response:", data);
+  throw new Error("The symptoms response is not in the expected format.");
+}
 
       const groupedSymptoms = {
         head: [],
