@@ -438,8 +438,8 @@ function loadSymptomsWithJsonp() {
       resolve(data);
     };
 
-    script.src =
-      "https://medguidex.rf.gd/get_symptoms.php?callback=" + callbackName;
+    script.referrerPolicy = "no-referrer";
+script.src = "https://medguidex.rf.gd/get_symptoms.php?callback=" + callbackName + "&t=" + Date.now();
 
     script.onerror = function () {
       cleanup();
@@ -504,7 +504,10 @@ function handleAnalyzeSymptoms() {
     return;
   }
 
-  localStorage.setItem("medguide_selected_symptoms", JSON.stringify(selected));
+  const formattedForAI = selected.map((s) =>
+  s.toLowerCase().replaceAll(" ", "_")
+);
+localStorage.setItem("medguide_selected_symptoms", JSON.stringify(formattedForAI));
   navigate("/our-Ai's");
 }
 
