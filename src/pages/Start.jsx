@@ -464,13 +464,13 @@ useEffect(() => {
 
       setSymptomCategories(groupedSymptoms);
       setErrorMessage("");
-    } catch (error) {
-      console.log(error);
-      setErrorMessage("Could not load symptoms from the database. Showing backup symptoms.");
-      setSymptomCategories(backupSymptomCategories);
-    } finally {
-      setIsLoading(false);
-    }
+  } catch (error) {
+  console.log(error);
+  setErrorMessage(error.message);
+  setSymptomCategories(backupSymptomCategories);
+} finally {
+  setIsLoading(false);
+}
   }
 
   loadSymptomsFromDatabase();
