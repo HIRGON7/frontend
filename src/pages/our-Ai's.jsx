@@ -98,17 +98,55 @@ function Ai() {
     }
   }
 
-  async function getDiseaseDetailsFromDatabase(diseaseName) {
-    const response = await fetch("/php/get_disease_details.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        disease: diseaseName,
-      }),
-    });
+  function cleanDiseaseNameForDatabase(diseaseName) {
+  let cleanedName = String(diseaseName);
+
+  cleanedName = cleanedName.replaceAll("_", " ");
+  cleanedName = cleanedName.replace(/\s+/g, " ");
+  cleanedName = cleanedName.trim();
+
+  return cleanedName;
+}
+
+async function getDiseaseDetailsFromDatabase(diseaseName) {
+  const cleanedDiseaseName = cleanDiseaseNameForDatabase(diseaseName);
+
+  console.log("Disease from FastAPI:", diseaseName);
+  console.log("Disease sent to database:", cleanedDiseaseName);
+
+  const response = await fetch("/php/get_disease_details.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      disease: cleanedDiseaseName,
+    }),
+  });
+
+  const text = await response.text();
+
+  console.log("Raw disease details response:", text);
+
+  if (!response.ok) {
+    throw new Error("Disease details request failed with status " + response.status);
+  }
+
+  if (text.trim().startsWith("<")) {
+    throw new Error("PHP returned HTML instead of JSON.");
+  }
+
+  const json = JSON.parse(text);
+
+  console.log("Disease details response:", json);
+
+  if (!json.success) {
+    throw new Error(json.message || "Disease details not found in database.");
+  }
+
+  return json.disease;
+}
 
     const text = await response.text();
 
