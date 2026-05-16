@@ -461,15 +461,11 @@ useEffect(() => {
 
       console.log("Symptoms JSONP response:", json);
 
-      const symptomsFromDatabase = json.data ? json.data : json;
-
-      if (
-        !symptomsFromDatabase ||
-        typeof symptomsFromDatabase !== "object" ||
-        Array.isArray(symptomsFromDatabase)
-      ) {
-        throw new Error("The symptoms response is not in the expected format.");
+      if (!json.success) {
+        throw new Error(json.message || "Database did not return success.");
       }
+
+      const symptomsFromDatabase = json.data;
 
       const groupedSymptoms = {
         head: [],
@@ -489,7 +485,7 @@ useEffect(() => {
       }
 
       const hasSymptoms = Object.values(groupedSymptoms).some(
-        (categoryList) => categoryList.length > 0
+        (categorySymptoms) => categorySymptoms.length > 0
       );
 
       if (!hasSymptoms) {
@@ -509,6 +505,9 @@ useEffect(() => {
 
   loadSymptoms();
 }, []);
+
+
+  
 
 function getCategoryKey(categoryName) {
   const text = String(categoryName).toLowerCase();
