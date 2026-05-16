@@ -1,10 +1,6 @@
 {
   "rewrites": [
     {
-      "source": "/php/:path*",
-      "destination": "https://medguidex.rf.gd/:path*"
-    },
-    {
       "source": "/:path*",
       "destination": "/index.html"
     }
