@@ -453,19 +453,47 @@ script.src = "https://medguidex.rf.gd/get_symptoms.php?callback=" + callbackName
 
 useEffect(() => {
   async function loadSymptoms() {
-    try {
-      const response = await fetch("https://your-render-url.onrender.com/symptoms");
-      const json = await response.json();
+    setIsLoading(true);
+    setErrorMessage("");
 
-      if (!json.success) throw new Error(json.message);
+    try {
+      const json = await loadSymptomsWithJsonp();
+
+      console.log("Symptoms JSONP response:", json);
+
+      const symptomsFromDatabase = json.data ? json.data : json;
+
+      if (
+        !symptomsFromDatabase ||
+        typeof symptomsFromDatabase !== "object" ||
+        Array.isArray(symptomsFromDatabase)
+      ) {
+        throw new Error("The symptoms response is not in the expected format.");
+      }
 
       const groupedSymptoms = {
-        head: [], chest: [], stomach: [], skin: [], general: [], legs: [],
+        head: [],
+        chest: [],
+        stomach: [],
+        skin: [],
+        general: [],
+        legs: [],
       };
 
-      for (const [dbCategory, symptomNames] of Object.entries(json.data)) {
+      for (const [dbCategory, symptomNames] of Object.entries(symptomsFromDatabase)) {
         const key = getCategoryKey(dbCategory);
-        groupedSymptoms[key] = symptomNames;
+
+        if (Array.isArray(symptomNames)) {
+          groupedSymptoms[key] = [...groupedSymptoms[key], ...symptomNames];
+        }
+      }
+
+      const hasSymptoms = Object.values(groupedSymptoms).some(
+        (categoryList) => categoryList.length > 0
+      );
+
+      if (!hasSymptoms) {
+        throw new Error("No symptoms were returned from the database.");
       }
 
       setSymptomCategories(groupedSymptoms);
