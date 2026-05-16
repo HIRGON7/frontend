@@ -2,703 +2,139 @@ import React, { useEffect, useState } from "react";
 import "../styles/start.css";
 import { useNavigate } from "react-router-dom";
 
-
-function Symptoms() {
-  
- const head = [
-  "abnormal_appearing_tongue",
-  "abnormal_movement_of_eyelid",
-  "abnormal_size_or_shape_of_ear",
-  "bleeding_from_ear",
-  "bleeding_from_eye",
-  "bleeding_gums",
-  "bleeding_in_mouth",
-  "blindness",
-  "cloudy_eye",
-  "coryza",
-  "cross_eyed",
-  "difficulty_in_swallowing",
-  "difficulty_speaking",
-  "diminished_hearing",
-  "diminished_vision",
-  "disturbance_of_smell_or_taste",
-  "dizziness",
-  "double_vision",
-  "drainage_in_throat",
-  "dry_lips",
-  "dry_or_flaky_scalp",
-  "ear_pain",
-  "eye_burns_or_stings",
-  "eye_deviation",
-  "eye_moves_abnormally",
-  "eye_redness",
-  "eye_strain",
-  "eyelid_lesion_or_rash",
-  "eyelid_retracted",
-  "eyelid_swelling",
-  "facial_pain",
-  "fluid_in_ear",
-  "foreign_body_sensation_in_eye",
-  "frontal_headache",
-  "gum_pain",
-  "headache",
-  "hoarse_voice",
-  "irregular_appearing_scalp",
-  "itchiness_of_eye",
-  "itchy_ear_s_",
-  "itchy_eyelid",
-  "itchy_scalp",
-  "jaw_pain",
-  "jaw_swelling",
-  "lacrimation",
-  "lip_sore",
-  "lip_swelling",
-  "lump_in_throat",
-  "lump_over_jaw",
-  "mass_on_ear",
-  "mass_on_eyelid",
-  "mouth_dryness",
-  "mouth_pain",
-  "mouth_ulcer",
-  "nasal_congestion",
-  "neck_cramps_or_spasms",
-  "neck_mass",
-  "neck_pain",
-  "neck_stiffness_or_tightness",
-  "neck_swelling",
-  "neck_weakness",
-  "nose_deformity",
-  "nosebleed",
-  "pain_in_eye",
-  "pain_in_gums",
-  "painful_sinuses",
-  "plugged_feeling_in_ear",
-  "pulling_at_ears",
-  "pupils_unequal",
-  "pus_draining_from_ear",
-  "redness_in_ear",
-  "redness_in_or_around_nose",
-  "ringing_in_ear",
-  "sinus_congestion",
-  "skin_on_head_or_neck_looks_infected",
-  "sneezing",
-  "sore_in_nose",
-  "sore_throat",
-  "spots_or_clouds_in_vision",
-  "stuttering_or_stammering",
-  "swollen_eye",
-  "swollen_or_red_tonsils",
-  "swollen_tongue",
-  "symptoms_of_eye",
-  "symptoms_of_the_face",
-  "throat_feels_tight",
-  "throat_irritation",
-  "throat_redness",
-  "throat_swelling",
-  "tongue_bleeding",
-  "tongue_lesions",
-  "tongue_pain",
-  "toothache",
-  "white_discharge_from_eye",
-];
-
-const chest = [
-  "abnormal_breathing_sounds",
-  "apnea",
-  "breathing_fast",
-  "burning_chest_pain",
-  "chest_tightness",
-  "congestion_in_chest",
-  "cough",
-  "coughing_up_sputum",
-  "decreased_heart_rate",
-  "difficulty_breathing",
-  "hemoptysis",
-  "hurts_to_breath",
-  "increased_heart_rate",
-  "irregular_heartbeat",
-  "palpitations",
-  "pus_in_sputum",
-  "rib_pain",
-  "sharp_chest_pain",
-  "shortness_of_breath",
-  "wheezing",
-];
-
-const stomach = [
-  "abdominal_distention",
-  "absence_of_menstruation",
-  "bedwetting",
-  "bladder_mass",
-  "bleeding_or_discharge_from_nipple",
-  "blood_clots_during_menstrual_periods",
-  "blood_in_stool",
-  "blood_in_urine",
-  "bumps_on_penis",
-  "burning_abdominal_pain",
-  "changes_in_stool_appearance",
-  "constipation",
-  "diarrhea",
-  "discharge_in_stools",
-  "early_or_late_onset_of_menopause",
-  "excessive_urination_at_night",
-  "flatulence",
-  "frequent_menstruation",
-  "frequent_urination",
-  "groin_mass",
-  "groin_pain",
-  "heartburn",
-  "heavy_menstrual_flow",
-  "hesitancy",
-  "impotence",
-  "incontinence_of_stool",
-  "infrequent_menstruation",
-  "infertility",
-  "intermenstrual_bleeding",
-  "irregular_belly_button",
-  "itching_of_scrotum",
-  "itching_of_the_anus",
-  "jaundice",
-  "kidney_mass",
-  "long_menstrual_periods",
-  "loss_of_sex_drive",
-  "low_urine_output",
-  "lower_abdominal_pain",
-  "lump_or_mass_of_breast",
-  "mass_in_scrotum",
-  "mass_on_vulva",
-  "mass_or_swelling_around_the_anus",
-  "melena",
-  "nausea",
-  "pain_during_intercourse",
-  "pain_during_pregnancy",
-  "pain_in_testicles",
-  "pain_of_the_anus",
-  "pain_or_soreness_of_breast",
-  "painful_menstruation",
-  "painful_urination",
-  "pelvic_pain",
-  "pelvic_pressure",
-  "penile_discharge",
-  "penis_pain",
-  "penis_redness",
-  "polyuria",
-  "postpartum_problems_of_the_breast",
-  "premature_ejaculation",
-  "premenstrual_tension_or_irritability",
-  "problems_during_pregnancy",
-  "problems_with_orgasm",
-  "problems_with_shape_or_size_of_breast",
-  "pus_in_urine",
-  "recent_pregnancy",
-  "rectal_bleeding",
-  "regurgitation",
-  "retention_of_urine",
-  "scanty_menstrual_flow",
-  "sharp_abdominal_pain",
-  "spotting_or_bleeding_during_pregnancy",
-  "stomach_bloating",
-  "suprapubic_pain",
-  "swelling_of_scrotum",
-  "swollen_abdomen",
-  "symptoms_of_bladder",
-  "symptoms_of_prostate",
-  "symptoms_of_the_kidneys",
-  "symptoms_of_the_scrotum_and_testes",
-  "unpredictable_menstruation",
-  "unusual_color_or_odor_to_urine",
-  "upper_abdominal_pain",
-  "uterine_contractions",
-  "vaginal_bleeding_after_menopause",
-  "vaginal_discharge",
-  "vaginal_dryness",
-  "vaginal_itching",
-  "vaginal_pain",
-  "vaginal_redness",
-  "vomiting",
-  "vomiting_blood",
-  "vulvar_irritation",
-  "vulvar_sore",
-];
-
-const skin = [
-  "abnormal_appearing_skin",
-  "acne_or_pimples",
-  "change_in_skin_mole_size_or_color",
-  "diaper_rash",
-  "flushing",
-  "irregular_appearing_nails",
-  "itching_of_skin",
-  "nailbiting",
-  "pallor",
-  "skin_dryness_peeling_scaliness_or_roughness",
-  "skin_growth",
-  "skin_irritation",
-  "skin_lesion",
-  "skin_moles",
-  "skin_oiliness",
-  "skin_on_arm_or_hand_looks_infected",
-  "skin_pain",
-  "skin_rash",
-  "skin_swelling",
-  "sweating",
-  "too_little_hair",
-  "unwanted_hair",
-  "warts",
-  "wrinkles_on_skin",
-];
-
-const general = [
-  "abnormal_involuntary_movements",
-  "abusing_alcohol",
-  "ache_all_over",
-  "allergic_reaction",
-  "antisocial_behavior",
-  "anxiety_and_nervousness",
-  "arm_cramps_or_spasms",
-  "arm_lump_or_mass",
-  "arm_pain",
-  "arm_stiffness_or_tightness",
-  "arm_swelling",
-  "arm_weakness",
-  "back_cramps_or_spasms",
-  "back_mass_or_lump",
-  "back_pain",
-  "back_stiffness_or_tightness",
-  "back_swelling",
-  "back_weakness",
-  "bones_are_painful",
-  "chills",
-  "cramps_and_spasms",
-  "decreased_appetite",
-  "delusions_or_hallucinations",
-  "depression",
-  "depressive_or_psychotic_symptoms",
-  "difficulty_eating",
-  "disturbance_of_memory",
-  "drug_abuse",
-  "elbow_cramps_or_spasms",
-  "elbow_lump_or_mass",
-  "elbow_pain",
-  "elbow_stiffness_or_tightness",
-  "elbow_swelling",
-  "elbow_weakness",
-  "emotional_symptoms",
-  "excessive_anger",
-  "excessive_appetite",
-  "excessive_growth",
-  "fainting",
-  "fatigue",
-  "fears_and_phobias",
-  "feeling_cold",
-  "feeling_hot",
-  "feeling_hot_and_cold",
-  "feeling_ill",
-  "fever",
-  "flu_like_syndrome",
-  "fluid_retention",
-  "focal_weakness",
-  "hand_or_finger_cramps_or_spasms",
-  "hand_or_finger_lump_or_mass",
-  "hand_or_finger_pain",
-  "hand_or_finger_stiffness_or_tightness",
-  "hand_or_finger_swelling",
-  "hand_or_finger_weakness",
-  "hostile_behavior",
-  "hot_flashes",
-  "hysterical_behavior",
-  "infant_feeding_problem",
-  "infant_spitting_up",
-  "insomnia",
-  "irritable_infant",
-  "joint_pain",
-  "joint_stiffness_or_tightness",
-  "joint_swelling",
-  "lack_of_growth",
-  "loss_of_sensation",
-  "low_back_cramps_or_spasms",
-  "low_back_pain",
-  "low_back_stiffness_or_tightness",
-  "low_back_swelling",
-  "low_back_weakness",
-  "low_self_esteem",
-  "lymphedema",
-  "muscle_cramps_contractures_or_spasms",
-  "muscle_pain",
-  "muscle_stiffness_or_tightness",
-  "muscle_swelling",
-  "muscle_weakness",
-  "nightmares",
-  "obsessions_and_compulsions",
-  "paresthesia",
-  "peripheral_edema",
-  "poor_circulation",
-  "posture_problems",
-  "problems_with_movement",
-  "recent_weight_loss",
-  "restlessness",
-  "seizures",
-  "shoulder_cramps_or_spasms",
-  "shoulder_lump_or_mass",
-  "shoulder_pain",
-  "shoulder_stiffness_or_tightness",
-  "shoulder_swelling",
-  "shoulder_weakness",
-  "side_pain",
-  "sleepiness",
-  "sleepwalking",
-  "slurring_words",
-  "smoking_problems",
-  "stiffness_all_over",
-  "swollen_lymph_nodes",
-  "symptoms_of_infants",
-  "temper_problems",
-  "thirst",
-  "underweight",
-  "weakness",
-  "weight_gain",
-  "wrist_lump_or_mass",
-  "wrist_pain",
-  "wrist_stiffness_or_tightness",
-  "wrist_swelling",
-  "wrist_weakness",
-];
-
-const legs = [
-  "ankle_pain",
-  "ankle_stiffness_or_tightness",
-  "ankle_swelling",
-  "ankle_weakness",
-  "bowlegged_or_knock_kneed",
-  "feet_turned_in",
-  "foot_or_toe_cramps_or_spasms",
-  "foot_or_toe_lump_or_mass",
-  "foot_or_toe_pain",
-  "foot_or_toe_stiffness_or_tightness",
-  "foot_or_toe_swelling",
-  "foot_or_toe_weakness",
-  "hip_lump_or_mass",
-  "hip_pain",
-  "hip_stiffness_or_tightness",
-  "hip_swelling",
-  "hip_weakness",
-  "knee_cramps_or_spasms",
-  "knee_lump_or_mass",
-  "knee_pain",
-  "knee_stiffness_or_tightness",
-  "knee_swelling",
-  "knee_weakness",
-  "leg_cramps_or_spasms",
-  "leg_lump_or_mass",
-  "leg_pain",
-  "leg_stiffness_or_tightness",
-  "leg_swelling",
-  "leg_weakness",
-  "lower_body_pain",
-  "skin_on_leg_or_foot_looks_infected",
-];
-  const backupSymptomCategories = {
-  head,
-  chest,
-  stomach,
-  skin,
-  general,
-  legs,
+// Fallback in case DB is unreachable
+const backupSymptomCategories = {
+  "Head & Neck": ["Headache", "Dizziness", "Sore Throat", "Ear Pain", "Nosebleed"],
+  "Chest / Breathing": ["Cough", "Shortness of Breath", "Chest Tightness", "Wheezing"],
+  "Stomach / Abdomen": ["Nausea", "Vomiting", "Diarrhea", "Constipation", "Heartburn"],
+  "Skin": ["Skin Rash", "Itching of Skin", "Acne or Pimples", "Skin Lesion"],
+  "General / Whole Body": ["Fever", "Fatigue", "Chills", "Weight Gain", "Weakness"],
+  "Legs & Feet": ["Leg Pain", "Knee Pain", "Ankle Swelling", "Hip Pain"],
 };
 
-const [activeCategory, setActiveCategory] = useState("head");
-const [selected, setSelected] = useState([]);
-const [searchText, setSearchText] = useState("");
-const [searchOpen, setSearchOpen] = useState(false);
-const [symptomCategories, setSymptomCategories] = useState(backupSymptomCategories);
-const [isLoading, setIsLoading] = useState(true);
-const [errorMessage, setErrorMessage] = useState("");
-const navigate = useNavigate();
+// Maps DB category names → your UI tab labels
+const CATEGORY_MAP = {
+  "Head & Neck": "Head",
+  "Chest / Breathing": "Chest",
+  "Stomach / Abdomen": "Stomach",
+  "Skin": "Skin",
+  "General / Whole Body": "General",
+  "Legs & Feet": "Legs",
+};
 
-
-function loadSymptomsWithJsonp() {
+const loadSymptomsWithJsonp = () => {
   return new Promise((resolve, reject) => {
-    const callbackName = "medguideSymptomsCallback_" + Date.now();
-
+    const callbackName = "medguide_cb_" + Date.now();
     const script = document.createElement("script");
 
-    const timeoutId = setTimeout(() => {
+    const timeout = setTimeout(() => {
       cleanup();
-      reject(new Error("Symptoms request timed out."));
-    }, 10000);
+      reject(new Error("Request timed out"));
+    }, 6000);
 
-    function cleanup() {
-      clearTimeout(timeoutId);
+    const cleanup = () => {
+      clearTimeout(timeout);
       delete window[callbackName];
-      script.remove();
-    }
-
-    window[callbackName] = function (data) {
-      cleanup();
-      resolve(data);
+      if (script.parentNode) script.parentNode.removeChild(script);
     };
 
-    script.src =
-      "https://medguidex.rf.gd/get_symptoms.php?callback=" + callbackName;
-
-    script.onerror = function () {
+    window[callbackName] = (data) => {
       cleanup();
-      reject(new Error("Could not load symptoms from InfinityFree."));
+      // Remap DB category names to UI names
+      const remapped = {};
+      for (const [dbCat, symptoms] of Object.entries(data)) {
+        const uiLabel = CATEGORY_MAP[dbCat] || dbCat;
+        remapped[uiLabel] = symptoms;
+      }
+      resolve(remapped);
     };
 
-    document.body.appendChild(script);
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("Script load failed"));
+    };
+
+    script.src = `https://medguidex.rf.gd/get_symptoms.php?callback=${callbackName}&t=${Date.now()}`;
+    document.head.appendChild(script);
   });
-}
+};
 
-  
-useEffect(() => {
-  async function loadSymptomsFromDatabase() {
-    try {
-     const data = await loadSymptomsWithJsonp();
+export default function Start() {
+  const navigate = useNavigate();
+  const [symptomCategories, setSymptomCategories] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [usingFallback, setUsingFallback] = useState(false);
 
-      let symptomsFromDatabase = [];
-
-     if (Array.isArray(data)) {
-  symptomsFromDatabase = data;
-} else if (Array.isArray(data.symptoms)) {
-  symptomsFromDatabase = data.symptoms;
-} else if (Array.isArray(data.data)) {
-  symptomsFromDatabase = data.data;
-} else if (data.success === false) {
-  throw new Error(data.message || "The API returned success false.");
-} else {
-  console.log("Actual symptoms API response:", data);
-  throw new Error("The symptoms response is not in the expected format.");
-}
-
-      const groupedSymptoms = {
-        head: [],
-        chest: [],
-        stomach: [],
-        skin: [],
-        general: [],
-        legs: [],
-      };
-
-      symptomsFromDatabase.forEach((row) => {
-       const symptomName =
-          row.symptom_key ||
-          row.symptom_name ||
-          row.name ||
-          row.symptom ||
-          row;
-
-        const categoryName =
-          row.category ||
-          row.category_name ||
-          "general";
-
-        const categoryKey = getCategoryKey(categoryName);
-
-        groupedSymptoms[categoryKey].push(symptomName);
+  useEffect(() => {
+    loadSymptomsWithJsonp()
+      .then((data) => {
+        setSymptomCategories(data);
+        setSelectedCategory(Object.keys(data)[0]);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.warn("DB load failed, using backup:", err);
+        setSymptomCategories(backupSymptomCategories);
+        setSelectedCategory(Object.keys(backupSymptomCategories)[0]);
+        setUsingFallback(true);
+        setLoading(false);
       });
+  }, []);
 
-      setSymptomCategories(groupedSymptoms);
-      setErrorMessage("");
-  } catch (error) {
-  console.log(error);
-  setErrorMessage(error.message);
-  setSymptomCategories(backupSymptomCategories);
-} finally {
-  setIsLoading(false);
-}
-  }
+  const toggleSymptom = (symptom) => {
+    setSelectedSymptoms((prev) =>
+      prev.includes(symptom) ? prev.filter((s) => s !== symptom) : [...prev, symptom]
+    );
+  };
 
-  loadSymptomsFromDatabase();
-}, []);
-
-function getCategoryKey(categoryName) {
-  const text = String(categoryName).toLowerCase();
-
-  if (text.includes("head") || text.includes("neck")) {
-    return "head";
-  }
-
-  if (text.includes("chest") || text.includes("breathing")) {
-    return "chest";
-  }
-
-  if (
-    text.includes("stomach") ||
-    text.includes("abdomen") ||
-    text.includes("abdominal")
-  ) {
-    return "stomach";
-  }
-
-  if (text.includes("skin")) {
-    return "skin";
-  }
-
-  if (text.includes("leg") || text.includes("feet") || text.includes("foot")) {
-    return "legs";
-  }
-
-  return "general";
-}
-  
-function handleAnalyzeSymptoms() {
-  if (selected.length === 0) {
-    alert("Please select at least one symptom first.");
-    return;
-  }
-
-  localStorage.setItem(
-    "medguide_selected_symptoms",
-    JSON.stringify(selected)
-  );
-
+  const handleContinue = () => {
+    localStorage.setItem("medguide_selected_symptoms", JSON.stringify(selectedSymptoms));
     navigate("/our-Ai's");
-}
+  };
 
+  if (loading) return <div className="loading">Loading symptoms...</div>;
 
-const currentSymptoms = symptomCategories[activeCategory] || [];
-  const allSymptoms = Object.values(symptomCategories).flat();
-  const query = searchText.trim().replaceAll("_", " ").toLowerCase();
-  
- let searchResults = [];
+  const categories = Object.keys(symptomCategories);
+  const currentSymptoms = selectedCategory ? symptomCategories[selectedCategory] : [];
 
-     if (query === "") {
-      searchResults = [];
-      } else {
-       searchResults = allSymptoms.filter((symptom) => {
-        const readableSymptom = symptom.replaceAll("_", " ").toLowerCase();
-    return readableSymptom.includes(query);
-  });
-}
+  return (
+    <div className="start-container">
+      <h1>Select Your Symptoms</h1>
+      {usingFallback && (
+        <p className="fallback-notice">Showing offline symptom list</p>
+      )}
 
+      <div className="category-tabs">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            className={`tab-btn ${selectedCategory === cat ? "active" : ""}`}
+            onClick={() => setSelectedCategory(cat)}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
 
- function saveSymptom(symptom) {
-  setSelected((oldSelected) => {
-    if (oldSelected.includes(symptom)) {
-      return oldSelected;
-    }
+      <div className="symptoms-grid">
+        {currentSymptoms.map((symptom) => (
+          <button
+            key={symptom}
+            className={`symptom-btn ${selectedSymptoms.includes(symptom) ? "selected" : ""}`}
+            onClick={() => toggleSymptom(symptom)}
+          >
+            {symptom}
+          </button>
+        ))}
+      </div>
 
-    return [...oldSelected, symptom];
-  });
-}
-
-function removeSymptom(symptomToRemove) {
-  setSelected((oldSelected) =>
-    oldSelected.filter((symptom) => symptom !== symptomToRemove)
+      {selectedSymptoms.length > 0 && (
+        <button className="continue-btn" onClick={handleContinue}>
+          Continue ({selectedSymptoms.length} selected)
+        </button>
+      )}
+    </div>
   );
 }
-  return (
-  <>
-  <div className="whole-page">
-
-
-  <div className="title-lol">
-  <h1>Select Your Symptoms</h1>
-
-  {isLoading && <p>Loading symptoms from database...</p>}
-
-  {errorMessage !== "" && <p>{errorMessage}</p>}
-</div>
-
-
- <div className="search-box">
-  <h3 className="search-lol">
-    Search or Browse Symptoms by Selecting a Category
-  </h3>
-
-  <input
-    className="search-bar"
-    value={searchText}
-    onChange={(e) => setSearchText(e.target.value)}
-    onFocus={() => setSearchOpen(true)}
-    onBlur={() => setSearchOpen(false)}
-    type="text"
-    placeholder="🔍Search symptoms...  (e.g. headache, nausea, shortness of breath)"
-  />
-
-  {searchOpen && searchResults.length > 0 && (
-    <div className="search-dropdown">
-      {searchResults.map((symptom) => (
-        <button
-          className="search-itemss"
-          onMouseDown={() => saveSymptom(symptom)}
-          key={symptom}
-        >
-          {symptom.replaceAll("_", " ")}
-        </button>
-      ))}
-    </div>
-  )}
-</div>
-
-
-    <div className="tabs">
-    <ul className="tabs-list">
-      <li><button onClick={() => setActiveCategory("head")}>Head</button></li>
-      <li><button onClick={() => setActiveCategory("chest")}>Chest</button></li>
-      <li><button onClick={() => setActiveCategory("stomach")}>Stomach</button></li>
-      <li><button onClick={() => setActiveCategory("skin")}>Skin</button></li>
-      <li><button onClick={() => setActiveCategory("general")}>General</button></li>
-      <li><button onClick={() => setActiveCategory("legs")}>Legs</button></li>
-    </ul>
-</div>
-
-
-
-    <div className="output">
-
-
-    <div className="symp">
-
-    <h2 className="title-symp">{activeCategory} </h2>
-      <div className="whole-symp">
-      <div className="symptoms-list">
-      {currentSymptoms.map((symptom) => (
-        <button onClick={() => saveSymptom(symptom)} className="symptom-item" key={symptom}>
-          {symptom.replaceAll("_"," ")}
-        </button>
-      ))}
-    </div>
-    </div>
-    </div>
-    
-
-
-    <div className="selected-symp">
-      
-    <h2 className="title-S-symp">Selected Symptoms</h2>
-    
-    <div className="selected-list">
-  {selected.map((symptom) => (
-    <button onClick={() => removeSymptom(symptom)} className="selected-items" key={symptom}>
-      {symptom.replaceAll("_", " ")}
-    </button>
-  ))}
-</div>
-    
-    <div className="Analyze">
-
-     <button onClick={handleAnalyzeSymptoms} className="btn-submit"> Analyze Symptoms</button>
-    </div>
-
-
-    </div>
-
-
-    </div>
-
-
-
-    <div className="footer-others">
-
-    </div>
-
-
-
-  </div>
-  </>
-  )
-}
-
-export default Symptoms;
