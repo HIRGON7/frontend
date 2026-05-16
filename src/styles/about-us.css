@@ -1,53 +1,79 @@
-.Heading{
-  width: 500px;
-   min-height: 20vh;
-  background:  radial-gradient(circle at 90% 20%, rgba(37,99,235,0.32) 0px, transparent 100px),
-  radial-gradient(circle at 10% 90%,  rgba(37,99,235,0.32) 0px, transparent 100px), #b8d2ec;
+* {
+  box-sizing: border-box;
+}
+
+/* =========================
+   MAIN SECTION
+   ========================= */
+
+.about-team-section {
+  min-height: 100vh;
+  width: 100%;
+  padding: 60px 20px;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+/* =========================
+   HEADING BOX
+   ========================= */
+
+.Heading {
+  width: min(500px, 100%);
+  min-height: 140px;
+  background:
+    radial-gradient(circle at 90% 20%, rgba(37, 99, 235, 0.32) 0px, transparent 100px),
+    radial-gradient(circle at 10% 90%, rgba(37, 99, 235, 0.32) 0px, transparent 100px),
+    #b8d2ec;
   border-radius: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
-    overflow: hidden;
-    margin: 50px;
-    align-self: center;
-    align-content: center;
-    margin: 50px auto;
-}
-
-
-
-
-
-
-
-
-
-.about-team-section {
-  min-height: 100vh;
-  padding: 60px 20px;
-  text-align: center;
+  overflow: hidden;
+  margin: 50px auto;
+  padding: 20px;
 }
 
 .about-team-section h1 {
   font-size: 2.5rem;
-  margin-bottom: 40px;
+  margin: 0;
   color: white;
 }
 
+/* =========================
+   TEAM CONTAINER
+   Desktop/laptop stays flex row
+   ========================= */
+
 .about-team-container {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: center;
   align-items: flex-start;
   gap: 40px;
+
+  width: min(1100px, 100%);
+  margin: 0 auto;
+
   border-radius: 30px;
-  padding: 90px;
-  flex-wrap: wrap;
-  background: linear-gradient(to bottom right,#b8d2ec , #6daff1);
+  padding: 70px 50px;
+
+  background: linear-gradient(to bottom right, #b8d2ec, #6daff1);
 }
+
+/* =========================
+   CARD WRAPPER
+   ========================= */
 
 .team-card-wrapper {
   width: 320px;
+  flex: 0 1 320px;
 }
+
+/* =========================
+   IMAGE CARD
+   ========================= */
 
 .team-card {
   width: 100%;
@@ -73,6 +99,9 @@
   display: block;
 }
 
+/* =========================
+   CARD OVERLAY
+   ========================= */
 
 .team-card-overlay {
   position: absolute;
@@ -100,39 +129,184 @@
   filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.45));
 }
 
+/* =========================
+   TEXT BOX
+   ========================= */
+
 .team-card-text {
- width: 300px;
-  min-height: 40vh;
-  background:  radial-gradient(circle at 90% 10%, rgba(37,99,235,0.32) 0px, transparent 100px),
-  radial-gradient(circle at 10% 90%,  rgba(37,99,235,0.32) 0px, transparent 100px),
-  #b8d2ec;
+  width: 100%;
+  min-height: auto;
+
+  background:
+    radial-gradient(circle at 90% 10%, rgba(37, 99, 235, 0.32) 0px, transparent 100px),
+    radial-gradient(circle at 10% 90%, rgba(37, 99, 235, 0.32) 0px, transparent 100px),
+    #b8d2ec;
+
   border-radius: 30px;
-  
-  justify-content: center;
-  align-items: center;
-    overflow: hidden;
-    margin: 50px auto;
-    align-self: center;
-    align-content: center;
-  padding: 0 10px;
+  overflow: hidden;
+
+  margin: 35px auto 0;
+  padding: 22px 16px;
+
   color: #527ede;
 }
 
 .team-card-text h2 {
   font-size: 1.6rem;
-  margin-bottom: 8px;
+  margin: 0 0 8px;
 }
 
 .team-card-text h4 {
   font-size: 1rem;
-  margin-bottom: 12px;
+  margin: 0 0 12px;
   color: #3da7ff;
 }
 
 .team-card-text p {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: #1a5e96 ;
-text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
-font-weight: bolder;
+  color: #1a5e96;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+  font-weight: bolder;
+  margin: 0;
+}
+
+/* =========================
+   MEDIUM SCREENS
+   Still NOT block
+   Only slightly smaller
+   ========================= */
+
+@media (max-width: 950px) {
+  .about-team-container {
+    gap: 25px;
+    padding: 45px 25px;
+  }
+
+  .team-card-wrapper {
+    width: 290px;
+    flex-basis: 290px;
+  }
+
+  .team-card {
+    height: 390px;
+  }
+
+  .team-card-text h2 {
+    font-size: 1.35rem;
+  }
+
+  .team-card-text p {
+    font-size: 0.85rem;
+  }
+}
+
+/* =========================
+   PHONE ONLY
+   Here we stack/block everything
+   ========================= */
+
+@media (max-width: 650px) {
+  .about-team-section {
+    padding: 25px 10px;
+  }
+
+  .Heading {
+    width: 100%;
+    min-height: 100px;
+    margin: 25px auto;
+    padding: 16px 10px;
+    border-radius: 22px;
+  }
+
+  .about-team-section h1 {
+    font-size: 2rem;
+  }
+
+  .about-team-container {
+    width: 100%;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 35px;
+    padding: 22px 12px;
+    border-radius: 22px;
+  }
+
+  .team-card-wrapper {
+    width: 100%;
+    max-width: 280px;
+    flex: none;
+  }
+
+  .team-card {
+    height: 350px;
+    border-radius: 18px;
+  }
+
+  .team-card-text {
+    width: 100%;
+    margin-top: 20px;
+    padding: 18px 14px;
+    border-radius: 22px;
+  }
+
+  .team-card-text h2 {
+    font-size: 1.25rem;
+  }
+
+  .team-card-text h4 {
+    font-size: 0.9rem;
+  }
+
+  .team-card-text p {
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+
+  .overlay-logo {
+    width: 95px;
+  }
+}
+
+/* =========================
+   VERY SMALL PHONES
+   ========================= */
+
+@media (max-width: 380px) {
+  .about-team-section {
+    padding: 20px 8px;
+  }
+
+  .team-card-wrapper {
+    max-width: 250px;
+  }
+
+  .team-card {
+    height: 315px;
+  }
+
+  .team-card-text {
+    padding: 16px 12px;
+  }
+
+  .team-card-text p {
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+}
+
+/* =========================
+   TOUCH DEVICES
+   Avoid weird hover behavior on phones
+   ========================= */
+
+@media (hover: none) {
+  .team-card:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+  }
+
+  .team-card:hover .team-card-overlay {
+    opacity: 0;
+  }
 }
