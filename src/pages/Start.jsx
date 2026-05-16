@@ -417,7 +417,7 @@ const navigate = useNavigate();
 useEffect(() => {
   async function loadSymptomsFromDatabase() {
     try {
-      const response = await fetch("/php/get_symptoms.php");
+     const response = await fetch("/api/get_symptoms");
 
       const data = await response.json();
 
