@@ -1,53 +1,31 @@
-export async function GET(request) {
+export default async function handler(req, res) {
   try {
     const phpResponse = await fetch("https://medguidex.rf.gd/get_symptoms.php", {
       method: "GET",
       headers: {
-        Accept: "application/json",
-      },
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0 MedGuide-Vercel-API"
+      }
     });
 
     const text = await phpResponse.text();
 
-    let data;
-
     try {
-      data = JSON.parse(text);
-    } catch (error) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          message: "InfinityFree returned HTML instead of JSON.",
-          preview: text.slice(0, 500),
-        }),
-        {
-          status: 502,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    }
+      const data = JSON.parse(text);
 
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (error) {
-    return new Response(
-      JSON.stringify({
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(502).json({
         success: false,
-        message: "Vercel could not reach get_symptoms.php.",
-        error: error.message,
-      }),
-      {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+        message: "InfinityFree did not return JSON. It returned HTML/text instead.",
+        preview: text.slice(0, 500)
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Vercel API could not reach InfinityFree.",
+      error: error.message
+    });
   }
 }
