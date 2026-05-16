@@ -7,6 +7,7 @@ function Ai() {
   const [confidence, setConfidence] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [detailsError, setDetailsError] = useState("");
   const [severity, setSeverity] = useState("—");
   const [recommendation, setRecommendation] = useState("—");
   const [consultDoctor, setConsultDoctor] = useState("—");
@@ -39,6 +40,7 @@ function Ai() {
   async function predictDisease(symptoms) {
     setLoading(true);
     setError("");
+    setDetailsError("");
     setPredictedDisease("");
     setConfidence(null);
     setSeverity("—");
@@ -85,11 +87,21 @@ function Ai() {
         setConfidence(data.confidence);
       }
 
-      const diseaseDetails = await getDiseaseDetailsFromDatabase(diseaseName);
+      try {
+        const diseaseDetails = await getDiseaseDetailsFromDatabase(diseaseName);
 
-      setSeverity(diseaseDetails.severity_level || "—");
-      setRecommendation(diseaseDetails.recommendation || "—");
-      setConsultDoctor(diseaseDetails.consult_doctor || "—");
+        setSeverity(diseaseDetails.severity_level || "—");
+        setRecommendation(diseaseDetails.recommendation || "—");
+        setConsultDoctor(diseaseDetails.consult_doctor || "—");
+        setDetailsError("");
+      } catch (detailsError) {
+        console.log("Disease details error:", detailsError);
+
+        setSeverity("Not found");
+        setRecommendation("Not found");
+        setConsultDoctor("Not found");
+        setDetailsError(detailsError.message || "Disease details were not found.");
+      }
     } catch (error) {
       console.log("AI page error:", error);
       setError(error.message || "Something went wrong.");
@@ -99,54 +111,31 @@ function Ai() {
   }
 
   function cleanDiseaseNameForDatabase(diseaseName) {
-  let cleanedName = String(diseaseName);
+    let cleanedName = String(diseaseName);
 
-  cleanedName = cleanedName.replaceAll("_", " ");
-  cleanedName = cleanedName.replace(/\s+/g, " ");
-  cleanedName = cleanedName.trim();
+    cleanedName = cleanedName.replaceAll("_", " ");
+    cleanedName = cleanedName.replace(/\s+/g, " ");
+    cleanedName = cleanedName.trim();
 
-  return cleanedName;
-}
-
-async function getDiseaseDetailsFromDatabase(diseaseName) {
-  const cleanedDiseaseName = cleanDiseaseNameForDatabase(diseaseName);
-
-  console.log("Disease from FastAPI:", diseaseName);
-  console.log("Disease sent to database:", cleanedDiseaseName);
-
-  const response = await fetch("/php/get_disease_details.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
-      disease: cleanedDiseaseName,
-    }),
-  });
-
-  const text = await response.text();
-
-  console.log("Raw disease details response:", text);
-
-  if (!response.ok) {
-    throw new Error("Disease details request failed with status " + response.status);
+    return cleanedName;
   }
 
-  if (text.trim().startsWith("<")) {
-    throw new Error("PHP returned HTML instead of JSON.");
-  }
+  async function getDiseaseDetailsFromDatabase(diseaseName) {
+    const cleanedDiseaseName = cleanDiseaseNameForDatabase(diseaseName);
 
-  const json = JSON.parse(text);
+    console.log("Disease from FastAPI:", diseaseName);
+    console.log("Disease sent to database:", cleanedDiseaseName);
 
-  console.log("Disease details response:", json);
-
-  if (!json.success) {
-    throw new Error(json.message || "Disease details not found in database.");
-  }
-
-  return json.disease;
-}
+    const response = await fetch("/php/get_disease_details.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        disease: cleanedDiseaseName,
+      }),
+    });
 
     const text = await response.text();
 
@@ -242,6 +231,7 @@ async function getDiseaseDetailsFromDatabase(diseaseName) {
         <div className="ai-card selected-symptoms-card">
           <div className="ai-card-header">
             <span className="ai-icon">☑</span>
+
             <div>
               <h2>Selected Symptoms</h2>
               <p>Your selected symptoms from the symptoms tab</p>
@@ -273,6 +263,7 @@ async function getDiseaseDetailsFromDatabase(diseaseName) {
         <div className="ai-card result-card">
           <div className="ai-card-header">
             <span className="ai-icon">☑</span>
+
             <div>
               <h2>Analysis Result</h2>
               <p>AI prediction based on your symptoms</p>
@@ -293,6 +284,10 @@ async function getDiseaseDetailsFromDatabase(diseaseName) {
           </div>
 
           {error !== "" && <p className="ai-error">{error}</p>}
+
+          {detailsError !== "" && error === "" && (
+            <p className="ai-error">{detailsError}</p>
+          )}
 
           <div className="result-row">
             <span>Severity</span>
@@ -318,28 +313,34 @@ async function getDiseaseDetailsFromDatabase(diseaseName) {
       <div className="ai-bottom-cards">
         <div className="ai-small-card">
           <span>☁</span>
+
           <div>
             <h3>FastAPI Connected</h3>
             <p>Live backend connection</p>
           </div>
+
           <strong>{backendStatus}</strong>
         </div>
 
         <div className="ai-small-card">
           <span>AI</span>
+
           <div>
             <h3>AI Model</h3>
             <p>Medical prediction model</p>
           </div>
+
           <strong>v1.0</strong>
         </div>
 
         <div className="ai-small-card">
           <span>🔒</span>
+
           <div>
             <h3>Private & Secure</h3>
             <p>Your symptoms stay private</p>
           </div>
+
           <strong>Secure</strong>
         </div>
       </div>
