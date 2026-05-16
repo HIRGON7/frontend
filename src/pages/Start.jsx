@@ -454,18 +454,16 @@ script.src = "https://medguidex.rf.gd/get_symptoms.php?callback=" + callbackName
 useEffect(() => {
   async function loadSymptoms() {
     try {
-      const data = await loadSymptomsWithJsonp();
+      const response = await fetch("https://your-render-url.onrender.com/symptoms");
+      const json = await response.json();
+
+      if (!json.success) throw new Error(json.message);
 
       const groupedSymptoms = {
-        head: [],
-        chest: [],
-        stomach: [],
-        skin: [],
-        general: [],
-        legs: [],
+        head: [], chest: [], stomach: [], skin: [], general: [], legs: [],
       };
 
-      for (const [dbCategory, symptomNames] of Object.entries(data)) {
+      for (const [dbCategory, symptomNames] of Object.entries(json.data)) {
         const key = getCategoryKey(dbCategory);
         groupedSymptoms[key] = symptomNames;
       }
@@ -483,7 +481,6 @@ useEffect(() => {
 
   loadSymptoms();
 }, []);
-
 
 function getCategoryKey(categoryName) {
   const text = String(categoryName).toLowerCase();
