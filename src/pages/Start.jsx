@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 
 function Symptoms() {
-  
- const head = [
+
+const head = [
   "abnormal_appearing_tongue",
   "abnormal_movement_of_eyelid",
   "abnormal_size_or_shape_of_ear",
@@ -397,7 +397,8 @@ const legs = [
   "lower_body_pain",
   "skin_on_leg_or_foot_looks_infected",
 ];
-  const backupSymptomCategories = {
+
+const backupSymptomCategories = {
   head,
   chest,
   stomach,
@@ -419,7 +420,6 @@ const navigate = useNavigate();
 function loadSymptomsWithJsonp() {
   return new Promise((resolve, reject) => {
     const callbackName = "medguideSymptomsCallback_" + Date.now();
-
     const script = document.createElement("script");
 
     const timeoutId = setTimeout(() => {
@@ -450,28 +450,11 @@ function loadSymptomsWithJsonp() {
   });
 }
 
-  
+
 useEffect(() => {
-  async function loadSymptomsFromDatabase() {
+  async function loadSymptoms() {
     try {
-     const response = await fetch("/api/get_symptoms");
-
-      const data = await response.json();
-
-      let symptomsFromDatabase = [];
-
-     if (Array.isArray(data)) {
-  symptomsFromDatabase = data;
-} else if (Array.isArray(data.symptoms)) {
-  symptomsFromDatabase = data.symptoms;
-} else if (Array.isArray(data.data)) {
-  symptomsFromDatabase = data.data;
-} else if (data.success === false) {
-  throw new Error(data.message || "The API returned success false.");
-} else {
-  console.log("Actual symptoms API response:", data);
-  throw new Error("The symptoms response is not in the expected format.");
-}
+      const data = await loadSymptomsWithJsonp();
 
       const groupedSymptoms = {
         head: [],
@@ -482,104 +465,68 @@ useEffect(() => {
         legs: [],
       };
 
-      symptomsFromDatabase.forEach((row) => {
-        const symptomName =
-          row.symptom_name ||
-          row.name ||
-          row.symptom ||
-          row;
-
-        const categoryName =
-          row.category ||
-          row.category_name ||
-          "general";
-
-        const categoryKey = getCategoryKey(categoryName);
-
-        groupedSymptoms[categoryKey].push(symptomName);
-      });
+      for (const [dbCategory, symptomNames] of Object.entries(data)) {
+        const key = getCategoryKey(dbCategory);
+        groupedSymptoms[key] = symptomNames;
+      }
 
       setSymptomCategories(groupedSymptoms);
       setErrorMessage("");
-  } catch (error) {
-  console.log(error);
-  setErrorMessage(error.message);
-  setSymptomCategories(backupSymptomCategories);
-} finally {
-  setIsLoading(false);
-}
+    } catch (error) {
+      console.log("DB load failed, using backup:", error);
+      setErrorMessage(error.message);
+      setSymptomCategories(backupSymptomCategories);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
-  loadSymptomsFromDatabase();
+  loadSymptoms();
 }, []);
+
 
 function getCategoryKey(categoryName) {
   const text = String(categoryName).toLowerCase();
 
-  if (text.includes("head") || text.includes("neck")) {
-    return "head";
-  }
-
-  if (text.includes("chest") || text.includes("breathing")) {
-    return "chest";
-  }
-
-  if (
-    text.includes("stomach") ||
-    text.includes("abdomen") ||
-    text.includes("abdominal")
-  ) {
-    return "stomach";
-  }
-
-  if (text.includes("skin")) {
-    return "skin";
-  }
-
-  if (text.includes("leg") || text.includes("feet") || text.includes("foot")) {
-    return "legs";
-  }
+  if (text.includes("head") || text.includes("neck")) return "head";
+  if (text.includes("chest") || text.includes("breathing")) return "chest";
+  if (text.includes("stomach") || text.includes("abdomen") || text.includes("abdominal")) return "stomach";
+  if (text.includes("skin")) return "skin";
+  if (text.includes("leg") || text.includes("feet") || text.includes("foot")) return "legs";
 
   return "general";
 }
-  
+
+
 function handleAnalyzeSymptoms() {
   if (selected.length === 0) {
     alert("Please select at least one symptom first.");
     return;
   }
 
-  localStorage.setItem(
-    "medguide_selected_symptoms",
-    JSON.stringify(selected)
-  );
-
-    navigate("/our-Ai's");
+  localStorage.setItem("medguide_selected_symptoms", JSON.stringify(selected));
+  navigate("/our-Ai's");
 }
 
 
 const currentSymptoms = symptomCategories[activeCategory] || [];
-  const allSymptoms = Object.values(symptomCategories).flat();
-  const query = searchText.trim().replaceAll("_", " ").toLowerCase();
-  
- let searchResults = [];
+const allSymptoms = Object.values(symptomCategories).flat();
+const query = searchText.trim().replaceAll("_", " ").toLowerCase();
 
-     if (query === "") {
-      searchResults = [];
-      } else {
-       searchResults = allSymptoms.filter((symptom) => {
-        const readableSymptom = symptom.replaceAll("_", " ").toLowerCase();
+let searchResults = [];
+if (query === "") {
+  searchResults = [];
+} else {
+  searchResults = allSymptoms.filter((symptom) => {
+    const readableSymptom = symptom.replaceAll("_", " ").toLowerCase();
     return readableSymptom.includes(query);
   });
 }
 
 
- function saveSymptom(symptom) {
+function saveSymptom(symptom) {
   setSelected((oldSelected) => {
-    if (oldSelected.includes(symptom)) {
-      return oldSelected;
-    }
-
+    if (oldSelected.includes(symptom)) return oldSelected;
     return [...oldSelected, symptom];
   });
 }
@@ -589,117 +536,97 @@ function removeSymptom(symptomToRemove) {
     oldSelected.filter((symptom) => symptom !== symptomToRemove)
   );
 }
-  return (
+
+
+return (
   <>
   <div className="whole-page">
 
-
-  <div className="title-lol">
-  <h1>Select Your Symptoms</h1>
-
-  {isLoading && <p>Loading symptoms from database...</p>}
-
-  {errorMessage !== "" && <p>{errorMessage}</p>}
-</div>
-
-
- <div className="search-box">
-  <h3 className="search-lol">
-    Search or Browse Symptoms by Selecting a Category
-  </h3>
-
-  <input
-    className="search-bar"
-    value={searchText}
-    onChange={(e) => setSearchText(e.target.value)}
-    onFocus={() => setSearchOpen(true)}
-    onBlur={() => setSearchOpen(false)}
-    type="text"
-    placeholder="🔍Search symptoms...  (e.g. headache, nausea, shortness of breath)"
-  />
-
-  {searchOpen && searchResults.length > 0 && (
-    <div className="search-dropdown">
-      {searchResults.map((symptom) => (
-        <button
-          className="search-itemss"
-          onMouseDown={() => saveSymptom(symptom)}
-          key={symptom}
-        >
-          {symptom.replaceAll("_", " ")}
-        </button>
-      ))}
+    <div className="title-lol">
+      <h1>Select Your Symptoms</h1>
+      {isLoading && <p>Loading symptoms from database...</p>}
+      {errorMessage !== "" && <p>{errorMessage}</p>}
     </div>
-  )}
-</div>
 
+    <div className="search-box">
+      <h3 className="search-lol">
+        Search or Browse Symptoms by Selecting a Category
+      </h3>
+
+      <input
+        className="search-bar"
+        value={searchText}
+        onChange={(e) => setSearchText(e.target.value)}
+        onFocus={() => setSearchOpen(true)}
+        onBlur={() => setSearchOpen(false)}
+        type="text"
+        placeholder="🔍Search symptoms...  (e.g. headache, nausea, shortness of breath)"
+      />
+
+      {searchOpen && searchResults.length > 0 && (
+        <div className="search-dropdown">
+          {searchResults.map((symptom) => (
+            <button
+              className="search-itemss"
+              onMouseDown={() => saveSymptom(symptom)}
+              key={symptom}
+            >
+              {symptom.replaceAll("_", " ")}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
 
     <div className="tabs">
-    <ul className="tabs-list">
-      <li><button onClick={() => setActiveCategory("head")}>Head</button></li>
-      <li><button onClick={() => setActiveCategory("chest")}>Chest</button></li>
-      <li><button onClick={() => setActiveCategory("stomach")}>Stomach</button></li>
-      <li><button onClick={() => setActiveCategory("skin")}>Skin</button></li>
-      <li><button onClick={() => setActiveCategory("general")}>General</button></li>
-      <li><button onClick={() => setActiveCategory("legs")}>Legs</button></li>
-    </ul>
-</div>
-
-
+      <ul className="tabs-list">
+        <li><button onClick={() => setActiveCategory("head")}>Head</button></li>
+        <li><button onClick={() => setActiveCategory("chest")}>Chest</button></li>
+        <li><button onClick={() => setActiveCategory("stomach")}>Stomach</button></li>
+        <li><button onClick={() => setActiveCategory("skin")}>Skin</button></li>
+        <li><button onClick={() => setActiveCategory("general")}>General</button></li>
+        <li><button onClick={() => setActiveCategory("legs")}>Legs</button></li>
+      </ul>
+    </div>
 
     <div className="output">
 
+      <div className="symp">
+        <h2 className="title-symp">{activeCategory}</h2>
+        <div className="whole-symp">
+          <div className="symptoms-list">
+            {currentSymptoms.map((symptom) => (
+              <button onClick={() => saveSymptom(symptom)} className="symptom-item" key={symptom}>
+                {symptom.replaceAll("_", " ")}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
-    <div className="symp">
+      <div className="selected-symp">
+        <h2 className="title-S-symp">Selected Symptoms</h2>
 
-    <h2 className="title-symp">{activeCategory} </h2>
-      <div className="whole-symp">
-      <div className="symptoms-list">
-      {currentSymptoms.map((symptom) => (
-        <button onClick={() => saveSymptom(symptom)} className="symptom-item" key={symptom}>
-          {symptom.replaceAll("_"," ")}
-        </button>
-      ))}
-    </div>
-    </div>
-    </div>
-    
+        <div className="selected-list">
+          {selected.map((symptom) => (
+            <button onClick={() => removeSymptom(symptom)} className="selected-items" key={symptom}>
+              {symptom.replaceAll("_", " ")}
+            </button>
+          ))}
+        </div>
 
-
-    <div className="selected-symp">
-      
-    <h2 className="title-S-symp">Selected Symptoms</h2>
-    
-    <div className="selected-list">
-  {selected.map((symptom) => (
-    <button onClick={() => removeSymptom(symptom)} className="selected-items" key={symptom}>
-      {symptom.replaceAll("_", " ")}
-    </button>
-  ))}
-</div>
-    
-    <div className="Analyze">
-
-     <button onClick={handleAnalyzeSymptoms} className="btn-submit"> Analyze Symptoms</button>
-    </div>
-
+        <div className="Analyze">
+          <button onClick={handleAnalyzeSymptoms} className="btn-submit">Analyze Symptoms</button>
+        </div>
+      </div>
 
     </div>
 
-
-    </div>
-
-
-
-    <div className="footer-others">
-
-    </div>
-
-
+    <div className="footer-others"></div>
 
   </div>
   </>
-  )
+);
 }
 
 export default Symptoms;
