@@ -5,10 +5,6 @@
       "destination": "http://medguidex.atwebpages.com/:path*"
     },
     {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
-    },
-    {
       "source": "/((?!api/|php/).*)",
       "destination": "/index.html"
     }
