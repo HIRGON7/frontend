@@ -2,10 +2,6 @@
   box-sizing: border-box;
 }
 
-/* =========================
-   DESKTOP / LAPTOP SIDEBAR
-   ========================= */
-
 .nav-ul {
   list-style-type: none;
   margin: 0;
@@ -67,10 +63,6 @@
   color: #60A5FA;
 }
 
-/* =========================
-   LOGO / NAME
-   ========================= */
-
 .logoImg-Name {
   margin-top: 30px;
 
@@ -111,10 +103,6 @@
   background-position: center;
 }
 
-/* =========================
-   AI PAGE SIDEBAR THEME
-   ========================= */
-
 .sidebar-ai-theme {
   background:
     radial-gradient(circle at center, rgba(0, 140, 255, 0.22), transparent 45%),
@@ -133,10 +121,6 @@
   transition: 0.5s ease-in-out;
 }
 
-/* =========================
-   ANIMATION
-   ========================= */
-
 @keyframes shine {
   0% {
     transform: translateX(-100%);
@@ -146,10 +130,6 @@
     transform: translateX(100%);
   }
 }
-
-/* =========================
-   PHONE ONLY NAVBAR
-   ========================= */
 
 @media (max-width: 700px) {
   .nav-ul {
@@ -234,10 +214,6 @@
     border-bottom: 1px solid rgba(0, 140, 255, 0.65);
   }
 }
-
-/* =========================
-   VERY SMALL PHONES
-   ========================= */
 
 @media (max-width: 450px) {
   .nav-ul {
