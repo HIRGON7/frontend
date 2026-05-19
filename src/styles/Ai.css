@@ -170,6 +170,7 @@
   box-shadow 0.8s ease-in-out,
   filter 0.8s ease-in-out,
   transform 0.8s ease-in-out;
+  
   position: relative;
   width: 180px;
   height: 180px;
@@ -195,7 +196,7 @@
   filter: none;
 }
 
-/* REAL soft glow behind the orb */
+
 .ai-orb::before {
   content: "";
   position: absolute;
@@ -203,7 +204,7 @@
   border-radius: 50%;
   z-index: -2;
   pointer-events: none;
-
+  
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0.95) 0%,
@@ -218,8 +219,14 @@
   transform: translateZ(0);
 }
 
-/* small bright core highlight */
+
 .ai-orb::after {
+   transition:
+    inset 0.8s ease-in-out,
+    background 0.8s ease-in-out,
+    filter 0.8s ease-in-out,
+    opacity 0.8s ease-in-out;
+  
   content: "";
   position: absolute;
   inset: 18%;
