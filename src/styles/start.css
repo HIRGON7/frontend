@@ -2,9 +2,6 @@
   box-sizing: border-box;
 }
 
-/* =========================
-   WHOLE PAGE
-   ========================= */
 
 .whole-page {
   min-height: 100vh;
@@ -21,9 +18,7 @@
   padding: 0 12px 40px;
 }
 
-/* =========================
-   TITLE
-   ========================= */
+
 
 .title-lol {
   width: min(100%, 1100px);
@@ -53,9 +48,7 @@
   margin: 10px 0 0;
 }
 
-/* =========================
-   SEARCH
-   ========================= */
+
 
 .search-box {
   width: min(100%, 1000px);
@@ -154,9 +147,7 @@
   color: white;
 }
 
-/* =========================
-   TABS
-   ========================= */
+
 
 .tabs {
   width: min(100%, 1000px);
@@ -217,10 +208,7 @@
   color: #4b91e7;
 }
 
-/* =========================
-   MAIN OUTPUT
-   Desktop/laptop stays side by side
-   ========================= */
+
 
 .output {
   width: min(100%, 1500px);
@@ -261,9 +249,7 @@
   overflow: hidden;
 }
 
-/* =========================
-   BOX TITLES
-   ========================= */
+
 
 .title-symp,
 .title-S-symp {
@@ -289,9 +275,7 @@
   background: #b8d2ec;
 }
 
-/* =========================
-   SYMPTOMS LIST
-   ========================= */
+
 
 .whole-symp {
   flex: 1;
@@ -342,9 +326,7 @@
   background: linear-gradient(to bottom, #0974df, #3190ef);
 }
 
-/* =========================
-   SELECTED SYMPTOMS
-   ========================= */
+
 
 .selected-list {
   flex: 1;
@@ -394,9 +376,7 @@
   background: #3190ef;
 }
 
-/* =========================
-   ANALYZE BUTTON
-   ========================= */
+
 
 .Analyze {
   display: flex;
@@ -424,10 +404,7 @@
   color: #0080ff;
 }
 
-/* =========================
-   MEDIUM SCREENS
-   Still side by side, not block
-   ========================= */
+
 
 @media (max-width: 950px) {
   .output {
@@ -465,10 +442,7 @@
   }
 }
 
-/* =========================
-   PHONE ONLY
-   Stack/block everything here
-   ========================= */
+
 
 @media (max-width: 650px) {
   .whole-page {
@@ -595,9 +569,7 @@
   }
 }
 
-/* =========================
-   VERY SMALL PHONES
-   ========================= */
+
 
 @media (max-width: 380px) {
   .tabs-list button {
