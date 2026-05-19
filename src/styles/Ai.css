@@ -165,49 +165,101 @@
   }
 }
 .ai-orb {
-  width: 160px;
-  height: 160px;
+  position: relative;
+  width: 180px;
+  height: 180px;
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
-  background:
-    radial-gradient(circle at 35% 35%, #ffffff, #dceeff 35%, #7bbdff 65%, #ffffff);
-
-  box-shadow:
-    0 0 35px rgba(255, 255, 255, 0.9),
-    0 0 80px rgba(22, 140, 255, 0.85),
-    0 0 130px rgba(0, 140, 255, 0.8);
-
-  animation: floatOrb 3s ease-in-out infinite;
-
-  transition:
-    box-shadow 0.65s ease,
-    filter 0.65s ease,
-    background 0.65s ease;
-
-  cursor: pointer;
+  overflow: visible;
   z-index: 5;
-}
-
-.ai-orb:hover {
-  border-radius: 50%;
 
   background: radial-gradient(
-    circle at 32% 32%,
+    circle at 35% 30%,
     #ffffff 0%,
-    #f4fbff 28%,
-    #c8e7ff 52%,
-    #8dccff 68%,
-    rgba(141, 204, 255, 0.45) 82%,
-    transparent 100%
+    #ffffff 28%,
+    #e8fbff 48%,
+    #9ff6ff 68%,
+    #43cfff 86%,
+    #0d8dff 100%
   );
 
   box-shadow:
-    0 0 45px rgba(255, 255, 255, 0.9),
-    0 0 95px rgba(120, 205, 255, 0.65),
-    0 0 150px rgba(0, 140, 255, 0.45);
+    inset -20px -25px 45px rgba(0, 120, 255, 0.28),
+    inset 18px 18px 35px rgba(255, 255, 255, 0.95);
 
-  filter: brightness(1.12);
+  filter: none;
 }
 
+/* REAL soft glow behind the orb */
+.ai-orb::before {
+  content: "";
+  position: absolute;
+  inset: -140px;
+  border-radius: 50%;
+  z-index: -2;
+  pointer-events: none;
+
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(130, 225, 255, 0.75) 18%,
+    rgba(0, 150, 255, 0.45) 38%,
+    rgba(0, 120, 255, 0.22) 58%,
+    rgba(0, 120, 255, 0.08) 74%,
+    transparent 100%
+  );
+
+  filter: blur(28px);
+  transform: translateZ(0);
+}
+
+/* small bright core highlight */
+.ai-orb::after {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  pointer-events: none;
+
+  background: radial-gradient(
+    circle at 35% 30%,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.25) 45%,
+    transparent 75%
+  );
+}
+
+.ai-orb:hover {
+  background: radial-gradient(
+    circle at 35% 30%,
+    #ffffff 0%,
+    #ffffff 30%,
+    #f0fdff 50%,
+    #a8f6ff 68%,
+    #4ed7ff 84%,
+    #0d9dff 100%
+  );
+
+  box-shadow:
+    inset -22px -28px 50px rgba(0, 120, 255, 0.3),
+    inset 18px 18px 40px rgba(255, 255, 255, 1);
+}
+
+.ai-orb:hover::before {
+  inset: -170px;
+
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(170, 240, 255, 0.9) 18%,
+    rgba(0, 170, 255, 0.58) 38%,
+    rgba(0, 130, 255, 0.28) 60%,
+    rgba(0, 130, 255, 0.1) 76%,
+    transparent 100%
+  );
+
+  filter: blur(34px);
+}
 
 body.our-ai-body {
   background: #020716;
