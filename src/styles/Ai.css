@@ -165,7 +165,11 @@
   }
 }
 .ai-orb {
-  transition: 0.5s ease-in-out;
+  transition: 
+  background 0.8s ease-in-out,
+  box-shadow 0.8s ease-in-out,
+  filter 0.8s ease-in-out,
+  transform 0.8s ease-in-out;
   position: relative;
   width: 180px;
   height: 180px;
