@@ -2,10 +2,6 @@
   box-sizing: border-box;
 }
 
-/* =========================
-   MAIN SECTION
-   ========================= */
-
 .about-team-section {
   min-height: 100vh;
   width: 100%;
@@ -13,10 +9,6 @@
   text-align: center;
   overflow-x: hidden;
 }
-
-/* =========================
-   HEADING BOX
-   ========================= */
 
 .Heading {
   width: min(500px, 100%);
@@ -40,11 +32,6 @@
   color: white;
 }
 
-/* =========================
-   TEAM CONTAINER
-   Desktop/laptop stays flex row
-   ========================= */
-
 .about-team-container {
   display: flex;
   flex-direction: row;
@@ -62,18 +49,10 @@
   background: linear-gradient(to bottom right, #b8d2ec, #6daff1);
 }
 
-/* =========================
-   CARD WRAPPER
-   ========================= */
-
 .team-card-wrapper {
   width: 320px;
   flex: 0 1 320px;
 }
-
-/* =========================
-   IMAGE CARD
-   ========================= */
 
 .team-card {
   width: 100%;
@@ -98,10 +77,6 @@
   object-fit: cover;
   display: block;
 }
-
-/* =========================
-   CARD OVERLAY
-   ========================= */
 
 .team-card-overlay {
   position: absolute;
@@ -128,11 +103,6 @@
   opacity: 0.95;
   filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.45));
 }
-
-/* =========================
-   TEXT BOX
-   ========================= */
-
 .team-card-text {
   width: 100%;
   min-height: auto;
@@ -171,12 +141,6 @@
   margin: 0;
 }
 
-/* =========================
-   MEDIUM SCREENS
-   Still NOT block
-   Only slightly smaller
-   ========================= */
-
 @media (max-width: 950px) {
   .about-team-container {
     gap: 25px;
@@ -200,11 +164,6 @@
     font-size: 0.85rem;
   }
 }
-
-/* =========================
-   PHONE ONLY
-   Here we stack/block everything
-   ========================= */
 
 @media (max-width: 650px) {
   .about-team-section {
@@ -269,10 +228,6 @@
   }
 }
 
-/* =========================
-   VERY SMALL PHONES
-   ========================= */
-
 @media (max-width: 380px) {
   .about-team-section {
     padding: 20px 8px;
@@ -295,11 +250,6 @@
     line-height: 1.5;
   }
 }
-
-/* =========================
-   TOUCH DEVICES
-   Avoid weird hover behavior on phones
-   ========================= */
 
 @media (hover: none) {
   .team-card:hover {
