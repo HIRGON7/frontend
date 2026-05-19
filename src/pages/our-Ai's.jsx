@@ -253,10 +253,19 @@ function Ai() {
 
         <div className="ai-card ai-center-card">
           <div className="orb-container">
-            <div className="orb-ring"></div>
-            <div className="orb-ring2"></div>
-            <div className="orb-ring3"></div>
-            <div className="ai-orb"></div>
+  <div className="orb-stage">
+    <div className="orb-ring orb-ring-back orb-ring-one"></div>
+    <div className="orb-ring orb-ring-back orb-ring-two"></div>
+    <div className="orb-ring orb-ring-back orb-ring-three"></div>
+
+    <div className="ai-orb-shadow"></div>
+    <div className="ai-orb"></div>
+
+    <div className="orb-ring orb-ring-front orb-ring-one"></div>
+    <div className="orb-ring orb-ring-front orb-ring-two"></div>
+    <div className="orb-ring orb-ring-front orb-ring-three"></div>
+  </div>
+</div>assName="ai-orb"></div>
           </div>
         </div>
 
